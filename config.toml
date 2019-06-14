@@ -1,0 +1,84 @@
+baseurl = "https://googlebaba.io"
+DefaultContentLanguage = "zh"
+#DefaultContentLanguage = "ja"
+title = "蛋蛋的小黑屋"
+theme = "beautifulhugo"
+metaDataFormat = "yaml"
+pygmentsUseClasses = true
+pygmentCodeFences = true
+#disqusShortname = "XXX"
+#googleAnalytics = "XXX"
+
+
+
+
+[Params]
+  subtitle = "在仰望星空的同时,千万不要忘了脚踏实地,因为世界上的很多伟大都是熬出来的。"
+  logo = "img/avatar-icon.png"
+  #favicon = "img/favicon.ico"
+  dateFormat = "2006年1月2日"
+  commit = false
+  rss = true
+  baiduKey = "" # Baidu analytics
+  comments = true
+#  gcse = "012345678901234567890:abcdefghijk" # Get your code from google.com/cse. Make sure to go to "Look and Feel" and change Layout to "Full Width" and Theme to "Classic"
+
+#[[Params.bigimg]]
+#  src = "img/triangle.jpg"
+#  desc = "Triangle"
+#[[Params.bigimg]]
+#  src = "img/sphere.jpg"
+#  desc = "Sphere"
+#[[Params.bigimg]]
+#  src = "img/hexagon.jpg"
+#  desc = "Hexagon"
+
+[Author]
+  name = "suredandan"
+  website = "https://googlebaba.io"
+  email = "xrzp@qq.com"
+  facebook = "suredandan"
+  github = "googlebabaio"
+  twitter = "suredandan"
+  linkedin = "suredandan"
+  stackoverflow = "suredandan"
+  telegram = "138888888888"
+
+[[menu.main]]
+    name = "博客"
+    url = "post"
+    weight = 1
+
+[[menu.main]]
+    name = "关于我"
+    url = "page/about/"
+    weight = 3
+
+[[menu.main]]
+    identifier = "mybooks"
+    name = "书籍"
+    weight = 2
+
+[[menu.main]]
+    parent = "mybooks"
+    name = "K8s-Cookbook"
+    url = "https://googlebaba.io/k8scookbook"
+    weight = 1
+
+[[menu.main]]
+    parent = "mybooks"
+    name = "Oracle-Cookbook"
+    url = "https://googlebaba.io/oraclecookbook"
+    weight = 2
+
+[[menu.main]]
+    parent = "mybooks"
+    name = "MySQL-Cookbook"
+    url = "https://googlebaba.io/mysqlcookbook"
+    weight = 3
+
+
+[[menu.main]]
+    name = "分类"
+    url = "tags"
+    weight = 3
