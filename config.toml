@@ -62,7 +62,7 @@ pygmentCodeFences = true
 [[menu.main]]
     parent = "mybooks"
     name = "K8s-Cookbook"
-    url = "https://googlebaba.io/k8scookbook"
+    url = "https://googlebaba.io/k8s"
     weight = 1
 
 [[menu.main]]
