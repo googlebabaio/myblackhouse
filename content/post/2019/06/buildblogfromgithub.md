@@ -42,6 +42,12 @@ hugo --theme=beautifulhugo --baseUrl="https://googlebaba.io/"
 ## 上传静态网页到github仓库
 将public下面的所有上传到github仓库`googlebabaio.github.io`
 
+## 每次更新文档后的操作步骤
+```
+1. 进入相应的目录,如 cd D:\mybook\blog\myblackhouse
+2. hugo --theme=beautifulhugo --baseUrl="https://googlebaba.io/"
+3. 将public下面的所有上传到github仓库googlebabaio.github.io
+```
 
 # 模板参数说明
 
