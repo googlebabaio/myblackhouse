@@ -5,6 +5,9 @@ draft: false
 tags: ["golang"]
 ---
 
+给出一个常用的golang环境配置的步骤
+<!--more-->
+
 # golang环境配置
 goroot
 ```
