@@ -1,3 +1,11 @@
+---
+title: "client-go 示例"
+subtitile: "给出一个简单的client-go示例"
+date: 2019-06-29
+draft: false
+tags: ["k8s"]
+---
+
 ```
 package main
 
