@@ -1,3 +1,10 @@
+---
+title: "给dashboard加入CA认证"
+date: 2019-06-29
+draft: false
+tags: ["k8s"]
+---
+
 在部署完k8s集群后,往往会部署dashborad作为基础监控的一个手段.
 但有时候,部署好的dashboard在其他浏览器上无法正常访问,本文将提供解决的一个参考.
 <!--more-->
