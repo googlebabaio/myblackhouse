@@ -6,6 +6,9 @@ draft: false
 tags: ["k8s"]
 ---
 
+给出一个pod的使用示例,包括: `volume`,`initContainer`,`hook`
+<!--more-->
+
 ```
 apiVersion: v1
 kind: Pod
