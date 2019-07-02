@@ -16,3 +16,4 @@ tags: ["linux"]
  golang学习
  有时间可以看看Oracle的12c
  买个macbookpro?
+ ETCD?
