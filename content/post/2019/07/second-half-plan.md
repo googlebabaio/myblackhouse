@@ -17,3 +17,8 @@ tags: ["linux"]
  有时间可以看看Oracle的12c
  买个macbookpro?
  ETCD?
+ 真正理解什么是声明式编程
+ grpc 与 rest的区别
+ k8s源码解读
+ docker的cgroup解读
+ 
