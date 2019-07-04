@@ -1,6 +1,9 @@
-# Istio Architecture
+# Istio的架构
 
-![](assets/markdown-img-paste-20190703203054622.png)
+## 架构图
+  ![](assets/markdown-img-paste-20190704142222892.png)
+
+## 组件简要说明
 
 - Pilot 负责在运行时配置Envoy和Mixer。
 
@@ -13,3 +16,15 @@
 - Ingress/Egress 为入站和出站外部流量配置基于路径的路由。
 
 - Control Plane API ： 基础Orchestrator，如Kubernetes或Hashicorp Nomad。
+
+
+# 安装
+在k8s上的安装步骤
+
+## 安装crd
+
+## 安装镜像化的组件
+
+## 安装相关服务
+
+# 简单的bookinfo示例
