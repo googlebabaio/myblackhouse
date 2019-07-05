@@ -1,4 +1,5 @@
 # Istio的架构
+先来一张istio的架构图
 
 ## 架构图
   ![](assets/markdown-img-paste-20190704142222892.png)
@@ -79,7 +80,7 @@ templates.config.istio.io              2019-07-04T08:43:18Z
 virtualservices.networking.istio.io    2019-07-04T08:43:18Z
 ```
 
-## 安装`宽容模式`的组件
+## 3.安装`宽容模式`的组件和服务
 所谓`宽容模式`,是这样的场景适用于以下:
 - 已有应用的集群
 - 注入了 Istio sidecar 的服务有和非 Istio Kubernetes 服务通信的需要
@@ -87,7 +88,7 @@ virtualservices.networking.istio.io    2019-07-04T08:43:18Z
 - Headless 服务
 - StatefulSet
 
-既然有`宽容模式`,当然也会有`严格模式`
+既然有`宽容模式`,当然也会有`严格模式`,它的适用场景:
 - 这种模式会在所有的客户端和服务器之间使用 双向 TLS。
 - 这种模式只适合所有工作负载都受 Istio 管理的 Kubernetes 集群。所有新部署的工作负载都会注入 Istio sidecar。
 - 安装方法:`kubectl apply -f install/kubernetes/istio-demo-auth.yaml`
@@ -101,6 +102,7 @@ kubectl apply -f install/kubernetes/istio-demo.yaml
 > 注意:不需要单独创建namespace: istio-system,yaml中已经包含有了!
 
 安装完成过一会儿检查:
+pods:
 ```
 # kubectl get pod -n istio-system
 NAME                                      READY   STATUS      RESTARTS   AGE
@@ -121,6 +123,30 @@ kiali-7d749f9dcb-ccx7f                    1/1     Running     0          18h
 prometheus-776fdf7479-2v9ph               1/1     Running     0          18h
 ```
 
-## 安装相关服务
+svc:
+```
+# kubectl get svc -n istio-system
+NAME                     TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                                                                                                                                      AGE
+grafana                  ClusterIP   10.97.41.248     <none>        3000/TCP                                                                                                                                     20h
+istio-citadel            ClusterIP   10.105.42.128    <none>        8060/TCP,15014/TCP                                                                                                                           20h
+istio-egressgateway      ClusterIP   10.111.169.185   <none>        80/TCP,443/TCP,15443/TCP                                                                                                                     20h
+istio-galley             ClusterIP   10.103.130.165   <none>        443/TCP,15014/TCP,9901/TCP                                                                                                                   20h
+istio-ingressgateway     NodePort    10.98.7.252      <none>        15020:14258/TCP,80:31380/TCP,443:31390/TCP,31400:31400/TCP,15029:34236/TCP,15030:36304/TCP,15031:30107/TCP,15032:37550/TCP,15443:14718/TCP   20h
+istio-pilot              ClusterIP   10.104.167.145   <none>        15010/TCP,15011/TCP,8080/TCP,15014/TCP                                                                                                       20h
+istio-policy             ClusterIP   10.97.38.225     <none>        9091/TCP,15004/TCP,15014/TCP                                                                                                                 20h
+istio-sidecar-injector   ClusterIP   10.107.7.102     <none>        443/TCP                                                                                                                                      20h
+istio-telemetry          ClusterIP   10.101.129.171   <none>        9091/TCP,15004/TCP,15014/TCP,42422/TCP                                                                                                       20h
+jaeger-agent             ClusterIP   None             <none>        5775/UDP,6831/UDP,6832/UDP                                                                                                                   20h
+jaeger-collector         ClusterIP   10.106.186.132   <none>        14267/TCP,14268/TCP                                                                                                                          20h
+jaeger-query             ClusterIP   10.104.139.212   <none>        16686/TCP                                                                                                                                    20h
+kiali                    ClusterIP   10.109.83.19     <none>        20001/TCP                                                                                                                                    20h
+prometheus               ClusterIP   10.103.246.130   <none>        9090/TCP                                                                                                                                     20h
+tracing                  ClusterIP   10.108.248.50    <none>        80/TCP                                                                                                                                       20h
+zipkin                   ClusterIP   10.105.180.170   <none>        9411/TCP                                                                                                                                     20h
+```
 
-# 简单的bookinfo示例
+> 需要注意的是`istio-ingressgateway`这个服务,在模板里面默认用的是lb,但是如果没有lb的环境部署的时候,`CLUSTER-IP `这一列的状态会是`pending`或者`none` ,只需要将svc的type改为`NodePort`即可。
+
+
+# 参考:
+https://istio.io/zh/docs/setup/kubernetes/install/kubernetes/
