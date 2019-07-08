@@ -26,7 +26,7 @@ tags: ["杂七杂八"]
 
 ## 有如下一些认证:
 - Oracle 10gOCM
-- Oracle 10gOCM
+- Oracle 11gOCM
 - CNCF CKA
 
 ![](../assets/markdown-img-paste-20190611090439501.png)

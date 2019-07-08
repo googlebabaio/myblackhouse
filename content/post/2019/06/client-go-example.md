@@ -6,6 +6,8 @@ draft: false
 tags: ["k8s"]
 ---
 
+给出一个简单的client-go示例
+<!--more-->
 ```
 package main
 
