@@ -165,3 +165,11 @@ yum install -y socat
 unable to do port forwarding: socat not found.
 Error: cannot connect to Tiller
 ```
+
+查看仓库
+```
+[root@host-192-168-3-15 helm]# helm repo list
+NAME    URL
+stable  https://kubernetes-charts.storage.googleapis.com
+local   http://127.0.0.1:8879/charts
+```
