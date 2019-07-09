@@ -20,7 +20,7 @@ Istio是Google继Kubernetes之后的又一开源力作，它提供了一个完�
 
 下图是istio的一个架构示意图
 
-![istio架构示意图](../assets/markdown-img-paste-20190705134248982.png)
+![istio架构示意图](../assets/markdown-img-paste-20190709093848538.png)
 
 ## 为什么要用istio
 k8s提供的是容器的编排和调度能力，利用service的机制来做服务注册、发现和转发，通过kubeproxy有一定的转发和负载均衡能力。但k8s并不具备上层如熔断、限流降级、调用链治理等能力。
