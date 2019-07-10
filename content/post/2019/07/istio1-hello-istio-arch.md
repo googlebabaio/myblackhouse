@@ -141,6 +141,7 @@ virtualservices.networking.istio.io    2019-07-04T08:43:18Z
 
 ## 3.安装`宽容模式`的组件和服务
 所谓`宽容模式`,是这样的场景适用于以下:
+
 - 已有应用的集群
 - 注入了 Istio sidecar 的服务有和非 Istio Kubernetes 服务通信的需要
 - 需要进行存活和就绪检测的应用
@@ -148,6 +149,7 @@ virtualservices.networking.istio.io    2019-07-04T08:43:18Z
 - StatefulSet
 
 既然有`宽容模式`,当然也会有`严格模式`,它的适用场景:
+
 - 这种模式会在所有的客户端和服务器之间使用 双向 TLS。
 - 这种模式只适合所有工作负载都受 Istio 管理的 Kubernetes 集群。所有新部署的工作负载都会注入 Istio sidecar。
 - 安装方法:`kubectl apply -f install/kubernetes/istio-demo-auth.yaml`
