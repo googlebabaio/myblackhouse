@@ -1,6 +1,6 @@
 ---
 title: "helm V3试用"
-subtitile: "helm v3版本试用"
+subtitile: "helm v3版本新特性及试用"
 date: 2019-07-10
 draft: true
 tags: ["k8s"]
