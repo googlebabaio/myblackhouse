@@ -36,7 +36,7 @@ redo log的三种状态：
 - CURRENT：实例正在使用的日志文件
 
 ```
-idle>startup
+SQL >startup
 ORACLE instance started.
 
 Total System Global Area 1603411968 bytes
@@ -46,7 +46,7 @@ Database Buffers    117440512 bytes
 Redo Buffers          7319552 bytes
 Database mounted.
 ORA-00313: open failed for members of log group 2 of thread 1
-ORA-00312: online log 2 thread 1: '/u02/app/oracle/oradata/orcl/redo02.log'
+ORA-00312: online log 2 thread 1: '/u01/app/oracle/oradata/orcl/redo02.log'
 ORA-27037: unable to obtain file status
 Linux-x86_64 Error: 2: No such file or directory
 Additional information: 3
