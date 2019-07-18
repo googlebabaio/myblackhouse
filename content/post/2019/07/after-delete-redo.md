@@ -8,6 +8,9 @@ tags: ["Oracle"]
 删除redo后的恢复步骤
 <!--more-->
 
+
+https://blog.csdn.net/hailang08/article/details/54407282
+
 先说一下大体的思路，如果损坏的redo log是`INACTIVE`状态的，也就是实例崩溃恢复用不到的redo log，那处理起来比较容易，直接
 ```
 alter database clear logfile group #;
