@@ -5,6 +5,8 @@ draft: false
 tags: ["Oracle"]
 ---
 
+11g ADG的一些查漏补缺
+<!--more-->
 
 ## 保护模式
 ```
