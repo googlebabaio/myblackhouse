@@ -14,7 +14,10 @@ tags: ["Oracle"]
 2.修改 /etc/oratab 文件
 修改 /etc/oratab ，将
 ```
-orcl:/u01/app/oracle/product/11.2.0/dbhome_1:N修改为
+orcl:/u01/app/oracle/product/11.2.0/dbhome_1:N
+```
+修改为:
+```
 orcl:/u01/app/oracle/product/11.2.0/dbhome_1:Y
 ```
 
