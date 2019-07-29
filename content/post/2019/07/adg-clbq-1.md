@@ -9,7 +9,8 @@ tags: ["Oracle"]
 <!--more-->
 
 ## 保护模式
-```
+
+```sql
 SELECT DATABASE_ROLE,PROTECTION_MODE,PROTECTION_LEVEL from v$database;
 ```
 
@@ -65,14 +66,16 @@ ARCH传输模式：Primary DB上的online redo log写满或其他条件引起red
 建议使用该特性，它的主要作用是定义何时使用LOG_ARCHIVE_DEST_n目标参数，以及应在哪类重做日志文件上运行。
 
 下面是日志文件合法值：
-```
+
+```text
       ONLINE_LOGFILE    仅归档ORL文件时有效
       STANDBY_LOGFILE   仅归档SRL文件时有效
       ALL_LOGFILES      无论对于那种重做日志文件类型都有效
 ```
 
 下面是角色合法值：
-```
+
+```text
      PRIMAMRY_ROLE     仅对担当主角色的数据库有效
      STANDBY_ROLE      仅对担当备用角色的数据库有效
      ALL_ROLES         无论何种数据库角色都有效
