@@ -22,7 +22,7 @@ select error,dest_id frm v$archive_dest where rownum < 6;
 ```
 如果有错误提示,如ORA-16191,那说明是密码的问题
 可以将主库的密码刷新后,再全部重新传输一次到所有的主备库上
-刷新的方法应该采用`alter ysuser sys identified by xxx`,而不是去orapwd,因为修改了密码会自动同步到密码文件也同时会更新数据库中的数据字典
+刷新的方法应该采用`alter user sys identified by xxx`,而不是去orapwd,因为修改了密码会自动同步到密码文件也同时会更新数据库中的数据字典
 修改完成后,再去将相应的归档路径的state先改为defer,再改为enable,隔几十秒再去执行
 ```
 select error,dest_id frm v$archive_dest where rownum < 6;
@@ -30,6 +30,7 @@ select error,dest_id frm v$archive_dest where rownum < 6;
 查看error是否消除
 
 4.主库的switchover_status为`RESOLVABLE GAP`说明主库和备库之间存在数据没有同步,需要先解决了才能进去切换
+
 有几个状态:
 - `NOT ALLOWED` - On a primary database, this status indicates that there are no valid and enabled standby databases. On a standby database, this status indicates that a switchover request has not been received from the primary database. 
  

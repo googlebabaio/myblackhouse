@@ -2,7 +2,7 @@
 title: "五大重要算法介绍"
 date: 2019-07-08
 draft: true
-tags: ["Oracle"]
+tags: ["base"]
 ---
 
 五大重要算法介绍

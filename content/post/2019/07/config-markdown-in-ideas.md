@@ -1,3 +1,13 @@
+---
+title: "给 IDE 配置 markdown 的选项"
+date: 2019-07-27
+draft: false
+tags: [" 杂七杂八"]
+---
+
+记录一下给 ide(atom/vscode) 配置 markdown 的配置选项
+<!--more-->
+
 ## atom配置markdown
 
 - 增强预览(markdown-preview-plus)

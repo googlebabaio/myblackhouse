@@ -1,8 +1,8 @@
 ---
-title: "limitrange-resourcequota"
+title: "`limitrange`和`resourcequota`两者的区别"
 date: 2019-07-04
 draft: false
-tags: ["istio"]
+tags: ["k8s"]
 ---
 
 本文将介绍下`limitrange`和`resourcequota`两者的区别
