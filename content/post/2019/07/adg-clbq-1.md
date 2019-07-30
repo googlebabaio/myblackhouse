@@ -45,7 +45,7 @@ ARCH传输模式：Primary DB上的online redo log写满或其他条件引起red
 7个特性：
 
 ### SERVICE
-指定创建的指向备用数据库的TNSNAMES描述符。
+指定创建的指向备用数据库的`TNSNAMES`描述符。
 
 ### SYNC
 指定准备使用同步方法传输重做数据，这意味着LGWR进程将等待来自LNS的确认消息，然后才告知客户端事务已经提交。
@@ -125,4 +125,4 @@ log_archive_dest_3='service=tyqxdg2
 - 当然，其实备库没有srl也是可以的，这样只是不能做实时同步了，备库就只能收到主库传来的归档日志才可以recover，而且主库配置log_archive_dest_n参数的时候不能用lgwr和sync了。
 
 ## 级联更新
-有时候生产上，一主多备的需求会变成：一主一备一级联。 这个时候，对于级联库的主备库配置和普通的主备库类似，只是需要注意发送日志的参数里面，log_archive_dest_n要配置成standby的，以及角色要变为standby_logfile，standby_role
+有时候生产上，一主多备的需求会变成：一主一备一级联。 这个时候，对于级联库的主备库配置和普通的主备库类似，只是需要注意发送日志的参数里面，log_archive_dest_n要配置成standby的，以及角色要变为`standby_logfile`，`standby_role`
