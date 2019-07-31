@@ -16,7 +16,7 @@ tags: ["杂七杂八"]
 # hugo
 
 ## 安装
-下载最新的hugo,解压,编辑环境变量
+下载最新的[hugo](https://github.com/gohugoio/hugo/releases)   ,解压,编辑环境变量
 
 ## 创建站点
 进入到某个文件夹, 创建想要的站点名字,比如叫`lalala`
@@ -33,6 +33,12 @@ hugo new posts/xxx/xxx.md
 ```
 git clone https://github.com/coderzh/hugo-pacman-theme.git themes/myfav
 ```
+
+## 预览
+```
+hugo server -t beautifulhugo -D
+```
+访问 `http://localhost:1313` 即可
 
 ## build文档
 ```
