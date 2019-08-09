@@ -1,3 +1,15 @@
+---
+title: "深入解析下docker的 `隔离`与`限制`"
+date: 2019-08-8
+draft: false
+tags: ["k8s"]
+---
+
+
+深入解析下docker的 `隔离`与`限制`
+
+<!--more-->
+
 # 容器对隔离与限制
 ## 容器的namespace
 
