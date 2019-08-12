@@ -83,3 +83,6 @@ git clone https://github.com/zsh-users/zsh-autosuggestions
 vi ~/.zshrc
 ```
 
+最后的效果大致如下：
+
+![](img/2019-08-12-14-00-52.png)
