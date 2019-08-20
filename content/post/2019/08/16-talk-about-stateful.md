@@ -149,7 +149,7 @@ web-1
 
 可以看到，这两个 Pod 的 hostname 与 Pod 名字是一致的，都被分配了对应的编号。接下来，我们再试着以 DNS 的方式，访问一下这个 Headless Service：
 ```
-kubectl run -i --tty --image busybox dns-test --restart=Never --rm /bin/sh 
+kubectl run -i --tty --image busybox dns-test --restart=Never --rm /bin/sh
 ```
 
 
@@ -201,7 +201,7 @@ web-1     1/1       Running   0         32s
 所以，如果我们再用 nslookup 命令，查看一下这个新 Pod 对应的 Headless Service 的话：
 
 ```
-kubectl run -i --tty --image busybox dns-test --restart=Never --rm /bin/sh 
+kubectl run -i --tty --image busybox dns-test --restart=Never --rm /bin/sh
 $ nslookup web-0.nginx
 Server:    10.0.0.10
 Address 1: 10.0.0.10 kube-dns.kube-system.svc.cluster.local
@@ -240,4 +240,253 @@ StatefulSet 如何保证应用实例之间“拓扑状态”的稳定性。
 
 
 ====================
-StatefulSet 示例
+# StatefulSet 示例
+
+首先，用自然语言来描述一下我们想要部署的“有状态应用”。
+1. 是一个“主从复制”（Maser-Slave Replication）的 MySQL 集群；
+2. 有 1 个主节点（Master）；
+3. 有多个从节点（Slave）；
+4. 从节点需要能水平扩展；
+5. 所有的写操作，只能在主节点上执行；
+6. 读操作可以在所有节点上执行。
+
+![](assets/markdown-img-paste-20190820162842604.png)
+
+## 在常规下,我们配置mysql-master-slave的步骤:
+
+### 第一步:通过 `XtraBackup` 将 `Master` 节点的数据备份到指定目录。
+这一步会自动在目标目录里生成一个备份信息文件，名叫：xtrabackup_binlog_info。这个文件一般会包含如下两个信息：
+```
+cat xtrabackup_binlog_info
+TheMaster-bin.000001     481
+```
+这两个信息会在接下来配置 Slave 节点的时候用到。
+
+### 第二步：配置 Slave 节点。
+Slave 节点在第一次启动前，需要先把 Master 节点的备份数据，连同备份信息文件，一起拷贝到自己的数据目录（/var/lib/mysql）下。然后，我们执行这样一句 SQL：
+```
+CHANGE MASTER TO
+MASTER_HOST='$masterip',
+MASTER_USER='xxx',
+MASTER_PASSWORD='xxx',
+MASTER_LOG_FILE='TheMaster-bin.000001',
+MASTER_LOG_POS=481;
+```
+
+其中，MASTER_LOG_FILE 和 MASTER_LOG_POS，就是该备份对应的二进制日志（Binary Log）文件的名称和开始的位置（偏移量），也正是 xtrabackup_binlog_info 文件里的那两部分内容（即：TheMaster-bin.000001 和 481）。
+
+### 第三步:启动 Slave 节点
+在这一步，我们需要执行这样一句 SQL：
+```
+START SLAVE;
+```
+这样，Slave 节点就启动了。它会使用备份信息文件中的二进制日志文件和偏移量，与主节点进行数据同步。
+
+### 第四步:在这个集群中添加更多的 Slave 节点
+需要注意的是，新添加的 Slave 节点的备份数据，来自于已经存在的 Slave 节点。
+
+所以，在这一步，我们需要将 Slave 节点的数据备份在指定目录。而这个备份操作会自动生成另一种备份信息文件，名叫：xtrabackup_slave_info。同样地，这个文件也包含了 MASTER_LOG_FILE 和 MASTER_LOG_POS 两个字段。
+
+然后，我们就可以执行跟前面一样的“CHANGE MASTER TO”和“START SLAVE” 指令，来初始化并启动这个新的 Slave 节点了。
+
+## 使用k8s部署需要解决的问题
+通过上面的叙述，我们不难看到，将部署 MySQL 集群的流程迁移到 Kubernetes 项目上，需要能够“容器化”地解决下面的“三座大山”：
+
+1. Master 节点和 Slave 节点需要有不同的配置文件（即：不同的 my.cnf）；
+2. Master 节点和 Slave 节点需要能够传输备份信息文件；
+3. 在 Slave 节点第一次启动之前，需要执行一些初始化 SQL 操作；
+
+
+而由于 MySQL 本身同时拥有拓扑状态（主从节点的区别）和存储状态（MySQL 保存在本地的数据），我们要通过 StatefulSet 来解决这“三座大山”的问题。
+
+### 第一座大山：Master 节点和 Slave 节点需要有不同的配置文件
+我们只需要给主从节点分别准备两份不同的 MySQL 配置文件，然后根据 Pod 的序号（Index）挂载进去即可。
+```
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+data:
+  master.cnf: |
+    # 主节点 MySQL 的配置文件
+    [mysqld]
+    log-bin
+  slave.cnf: |
+    # 从节点 MySQL 的配置文件
+    [mysqld]
+    super-read-only
+```
+
+在这里，我们定义了 master.cnf 和 slave.cnf 两个 MySQL 的配置文件。
+- master.cnf 开启了 log-bin，即：使用二进制日志文件的方式进行主从复制，这是一个标准的设置。
+- slave.cnf 的开启了 super-read-only，代表的是从节点会拒绝除了主节点的数据同步操作之外的所有写操作，即：它对用户是只读的。
+
+
+而上述 ConfigMap 定义里的 data 部分，是 Key-Value 格式的。比如，master.cnf 就是这份配置数据的 Key，而“|”后面的内容，就是这份配置数据的 Value。这份数据将来挂载进 Master 节点对应的 Pod 后，就会在 Volume 目录里生成一个叫作 master.cnf 的文件。
+
+接下来，我们需要创建两个 Service 来供 StatefulSet 以及用户使用。这两个 Service 的定义如下所示：
+```
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql
+  labels:
+    app: mysql
+spec:
+  ports:
+  - name: mysql
+    port: 3306
+  clusterIP: None
+  selector:
+    app: mysql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-read
+  labels:
+    app: mysql
+spec:
+  ports:
+  - name: mysql
+    port: 3306
+  selector:
+    app: mysql
+```
+
+可以看到，这两个 Service 都代理了所有携带 app=mysql 标签的 Pod，也就是所有的 MySQL Pod。端口映射都是用 Service 的 3306 端口对应 Pod 的 3306 端口。
+
+不同的是:
+
+- 第一个名叫“mysql”的 Service 是一个 Headless Service（即：clusterIP= None）。所以它的作用，是通过为 Pod 分配 DNS 记录来固定它的拓扑状态，比如“mysql-0.mysql”和“mysql-1.mysql”这样的 DNS 名字。其中，编号为 0 的节点就是我们的主节点。
+
+- 而第二个名叫“mysql-read”的 Service，则是一个常规的 Service。
+
+并且我们可以规定，所有用户的**读请求**，都必须访问**第二个 Service **被自动分配的 DNS 记录，即：“mysql-read”（当然，也可以访问这个 Service 的 VIP）。这样，读请求就可以被转发到任意一个 MySQL 的主节点或者从节点上。
+
+而所有用户的写请求，则必须直接以 DNS 记录的方式访问到 MySQL 的主节点，也就是：“mysql-0.mysql“这条 DNS 记录。
+
+### 第二座大山:Master 节点和 Slave 节点需要能够传输备份文件”的问题
+
+翻越这座大山的思路，比较推荐的做法是：先搭建框架，再完善细节。其中，Pod 部分如何定义，是完善细节时的重点。
+
+先为 StatefulSet 对象规划一个大致的框架
+
+![](assets/markdown-img-paste-20190820164248740.png)
+
+比如：selector 表示，这个 StatefulSet 要管理的 Pod 必须携带 app=mysql 标签；它声明要使用的 Headless Service 的名字是：mysql。
+
+这个 StatefulSet 的 replicas 值是 3，表示它定义的 MySQL 集群有三个节点：一个 Master 节点，两个 Slave 节点。
+
+可以看到，StatefulSet 管理的“有状态应用”的多个实例，也都是通过同一份 Pod 模板创建出来的，使用的是同一个 Docker 镜像。
+
+除了这些基本的字段外，作为一个有存储状态的 MySQL 集群，StatefulSet 还需要管理存储状态。所以，我们需要通过 volumeClaimTemplate（PVC 模板）来为每个 Pod 定义 PVC。比如，这个 PVC 模板的 resources.requests.strorage 指定了存储的大小为 10 GiB；ReadWriteOnce 指定了该存储的属性为可读写，并且一个 PV 只允许挂载在一个宿主机上。将来，这个 PV 对应的的 Volume 就会充当 MySQL Pod 的存储数据目录。
+
+然后，重点设计一下这个 StatefulSet 的 Pod 模板，也就是 template 字段。
+
+由于 StatefulSet 管理的 Pod 都来自于同一个镜像，这就要求我们在编写 Pod 时，一定要保持清醒，用“人格分裂”的方式进行思考：
+- 如果这个 Pod 是 Master 节点，我们要怎么做；
+- 如果这个 Pod 是 Slave 节点，我们又要怎么做。
+
+#### 第一步：从 ConfigMap 中，获取 MySQL 的 Pod 对应的配置文件。
+
+为此，我们需要进行一个初始化操作，根据节点的角色是 Master 还是 Slave 节点，为 Pod 分配对应的配置文件。此外，MySQL 还要求集群里的每个节点都有一个唯一的 ID 文件，名叫 server-id.cnf。
+
+而根据我们已经掌握的 Pod 知识，这些初始化操作显然适合通过 InitContainer 来完成。所以，我们首先定义了一个 InitContainer，如下所示：
+
+```
+...
+# template.spec
+initContainers:
+- name: init-mysql
+  image: mysql:5.7
+  command:
+  - bash
+  - "-c"
+  - |
+    set -ex
+    # 从 Pod 的序号，生成 server-id
+    [[ `hostname` =~ -([0-9]+)$ ]] || exit 1
+    ordinal=${BASH_REMATCH[1]}
+    echo [mysqld] > /mnt/conf.d/server-id.cnf
+    # 由于 server-id=0 有特殊含义，我们给 ID 加一个 100 来避开它
+    echo server-id=$((100 + $ordinal)) >> /mnt/conf.d/server-id.cnf
+    # 如果 Pod 序号是 0，说明它是 Master 节点，从 ConfigMap 里把 Master 的配置文件拷贝到 /mnt/conf.d/ 目录；
+    # 否则，拷贝 Slave 的配置文件
+    if [[ $ordinal -eq 0 ]]; then
+      cp /mnt/config-map/master.cnf /mnt/conf.d/
+    else
+      cp /mnt/config-map/slave.cnf /mnt/conf.d/
+    fi
+  volumeMounts:
+  - name: conf
+    mountPath: /mnt/conf.d
+  - name: config-map
+    mountPath: /mnt/config-map
+```
+
+在这个名叫 init-mysql 的 InitContainer 的配置中，它从 Pod 的 hostname 里，读取到了 Pod 的序号，以此作为 MySQL 节点的 server-id。
+
+然后，init-mysql 通过这个序号，判断当前 Pod 到底是 Master 节点（即：序号为 0）还是 Slave 节点（即：序号不为 0），从而把对应的配置文件从 /mnt/config-map 目录拷贝到 /mnt/conf.d/ 目录下。
+
+其中，文件拷贝的源目录 /mnt/config-map，正是 ConfigMap 在这个 Pod 的 Volume，如下所示：
+```
+      ...
+      # template.spec
+      volumes:
+      - name: conf
+        emptyDir: {}
+      - name: config-map
+        configMap:
+          name: mysql
+```
+
+通过这个定义，init-mysql 在声明了挂载 config-map 这个 Volume 之后，ConfigMap 里保存的内容，就会以文件的方式出现在它的 /mnt/config-map 目录当中。
+
+而文件拷贝的目标目录，即容器里的 /mnt/conf.d/ 目录，对应的则是一个名叫 conf 的、emptyDir 类型的 Volume。基于 Pod Volume 共享的原理，当 InitContainer 复制完配置文件退出后，后面启动的 MySQL 容器只需要直接声明挂载这个名叫 conf 的 Volume，它所需要的.cnf 配置文件已经出现在里面了。这跟我们之前介绍的 Tomcat 和 WAR 包的处理方法是完全一样的。
+
+
+#### 第二步：在 Slave Pod 启动前，从 Master 或者其他 Slave Pod 里拷贝数据库数据到自己的目录下。
+
+为了实现这个操作，我们就需要再定义第二个 InitContainer，如下所示：
+```
+      ...
+      # template.spec.initContainers
+      - name: clone-mysql
+        image: gcr.io/google-samples/xtrabackup:1.0
+        command:
+        - bash
+        - "-c"
+        - |
+          set -ex
+          # 拷贝操作只需要在第一次启动时进行，所以如果数据已经存在，跳过
+          [[ -d /var/lib/mysql/mysql ]] && exit 0
+          # Master 节点 (序号为 0) 不需要做这个操作
+          [[ `hostname` =~ -([0-9]+)$ ]] || exit 1
+          ordinal=${BASH_REMATCH[1]}
+          [[ $ordinal -eq 0 ]] && exit 0
+          # 使用 ncat 指令，远程地从前一个节点拷贝数据到本地
+          ncat --recv-only mysql-$(($ordinal-1)).mysql 3307 | xbstream -x -C /var/lib/mysql
+          # 执行 --prepare，这样拷贝来的数据就可以用作恢复了
+          xtrabackup --prepare --target-dir=/var/lib/mysql
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/mysql
+          subPath: mysql
+        - name: conf
+          mountPath: /etc/mysql/conf.d
+```
+
+在这个名叫 clone-mysql 的 InitContainer 里，我们使用的是 xtrabackup 镜像（它里面安装了 xtrabackup 工具）。
+
+而在它的启动命令里，我们首先做了一个判断。即：当初始化所需的数据（/var/lib/mysql/mysql 目录）已经存在，或者当前 Pod 是 Master 节点的时候，不需要做拷贝操作。
+
+接下来，clone-mysql 会使用 Linux 自带的 ncat 指令，向 DNS 记录为“mysql-< 当前序号减一 >.mysql”的 Pod，也就是当前 Pod 的前一个 Pod，发起数据传输请求，并且直接用 xbstream 指令将收到的备份数据保存在 /var/lib/mysql 目录下。
+
+> 备注：3307 是一个特殊端口，运行着一个专门负责备份 MySQL 数据的辅助进程。我们后面马上会讲到它。
+
+当然，这一步你可以随意选择用自己喜欢的方法来传输数据。比如，用 scp 或者 rsync，都没问题。
+
+你可能已经注意到，这个容器里的 /var/lib/mysql 目录，实际上正是一个名为 data 的 PVC，即：我们在前面声明的持久化存储。
