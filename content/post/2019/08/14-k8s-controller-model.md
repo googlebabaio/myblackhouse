@@ -9,9 +9,9 @@ Pod 这个看似复杂的 API 对象，实际上就是对容器的进一步抽�
 `kube-controller-manager` 这个组件，就是一系列控制器的集合。我们可以查看一下 Kubernetes 项目的 pkg/controller 目录：
 ```
 cd kubernetes/pkg/controller/
-$ ls -d */              
-deployment/             job/                    podautoscaler/          
-cloud/                  disruption/             namespace/              
+$ ls -d */
+deployment/             job/                    podautoscaler/
+cloud/                  disruption/             namespace/
 replicaset/             serviceaccount/         volume/
 cronjob/                garbagecollector/       nodelifecycle/          replication/            statefulset/            daemon/
 ...
@@ -77,7 +77,7 @@ Deployment 看似简单，但实际上，它实现了 Kubernetes 项目中一个
 
 如果你更新了 Deployment 的 Pod 模板（比如，修改了容器的镜像），那么 Deployment 就需要遵循一种叫作“滚动更新”（rolling update）的方式，来升级现有的容器。
 
-而这个能力的实现，依赖的是 Kubernetes 项目中的一个非常重要的概念（API 对象）：ReplicaSet。
+而这个能力的实现，依赖的是 Kubernetes 项目中的一个非常重要的概念（API 对象）：`ReplicaSet`。
 
 ```
 apiVersion: apps/v1
@@ -103,7 +103,7 @@ spec:
 
 从这个 YAML 文件中，我们可以看到，一个 ReplicaSet 对象，其实就是由副本数目的定义和一个 Pod 模板组成的。不难发现，它的定义其实是 Deployment 的一个子集。
 
-更重要的是，Deployment 控制器实际操纵的，正是这样的 ReplicaSet 对象，而不是 Pod 对象。
+更重要的是，`Deployment` 控制器实际操纵的，正是这样的 `ReplicaSet` 对象，而不是 Pod 对象。
 
 ```
 apiVersion: apps/v1
