@@ -119,3 +119,11 @@ index fast full scan 是不回表的
 什么时候用索引: 5% ?
 
 null值不保存在索引
+
+
+
+======================
+数据库最新版本的选择依据：
+1. 选19c，这是一个长达7年的long term support的版本
+2. 19.3四月份出来的，oracle基于cloud first，19.1和19.2是for exadata，19.3才是for op的。
+3. 根据mike的建议，还是按照19.3， 19.4, 19.5的方式升级下去比较合适了。不按照RUR的路径升级，而是按照RU的路径升级（https://mikedietrichde.com/2018/11/08/why-release-update-revisions-rur-are-tricky/）
