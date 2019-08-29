@@ -1,3 +1,10 @@
+---
+title: "pod的预设功能介绍"
+date: 2019-08-15
+draft: false
+tags: ["k8s"]
+---
+
 pod预设功能
 
 你有没有产生这样一个想法：Pod 的字段这么多，我又不可能全记住，Kubernetes 能不能自动给 Pod 填充某些字段呢？
