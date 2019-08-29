@@ -1,3 +1,10 @@
+---
+title: "k8s中volumn的四种类型介绍"
+date: 2019-08-13
+draft: false
+tags: ["k8s"]
+---
+
 四种projected
 
 在 Kubernetes 中，有几种特殊的 Volume，它们存在的意义不是为了存放容器里的数据，也不是用来进行容器和宿主机之间的数据交换。这些特殊 Volume 的作用，是为容器提供预先定义好的数据。所以，从容器的角度来看，这些 Volume 里的信息就是仿佛是被 Kubernetes“投射”（Project）进入容器当中的。这正是 Projected Volume 的含义。
@@ -8,7 +15,7 @@
 - Downward API
 - ServiceAccountToken
 
-## Downward API 
+## Downward API
 示例：
 ```
 apiVersion: v1
@@ -86,5 +93,3 @@ Secret、ConfigMap，以及 Downward API 这三种 Projected Volume 定义的信
 Service Account 对象的作用，就是 Kubernetes 系统内置的一种“服务账户”，它是 Kubernetes 进行权限分配的对象。比如，Service Account A，可以只被允许对 Kubernetes API 进行 GET 操作，而 Service Account B，则可以有 Kubernetes API 的所有操作的权限。
 
 像这样的 Service Account 的授权信息和文件，实际上保存在它所绑定的一个特殊的 Secret 对象里的。这个特殊的 Secret 对象，就叫作ServiceAccountToken。任何运行在 Kubernetes 集群上的应用，都必须使用这个 ServiceAccountToken 里保存的授权信息，也就是 Token，才可以合法地访问 API Server。
-
-
