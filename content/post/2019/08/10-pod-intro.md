@@ -1,4 +1,9 @@
-
+---
+title: "认识pod的本质！"
+date: 2019-08-12
+draft: false
+tags: ["k8s"]
+---
 
 容器的本质到底是什么？
 
