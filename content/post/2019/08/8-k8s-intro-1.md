@@ -1,4 +1,9 @@
-
+---
+title: "kubernetes介绍"
+date: 2019-08-10
+draft: false
+tags: ["k8s"]
+---
 
 跟很多基础设施领域先有工程实践、后有方法论的发展路线不同，Kubernetes 项目的理论基础则要比工程实践走得靠前得多，这当然要归功于 Google 公司在 2015 年 4 月发布的 Borg 论文了。
 

@@ -1,4 +1,11 @@
-我眼中的kubernetes
+---
+title: "我眼中的kubernetes"
+date: 2019-08-9
+draft: false
+tags: ["k8s"]
+---
+
+# 我眼中的kubernetes
 
 架构
 
@@ -46,4 +53,3 @@ crd与operator
 
 
 提高生产力的工具
-
