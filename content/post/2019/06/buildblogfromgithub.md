@@ -37,6 +37,8 @@ git clone https://github.com/coderzh/hugo-pacman-theme.git themes/myfav
 ## 预览
 ```
 hugo server -t beautifulhugo -D
+
+hugo server --theme=myfav --buildDrafts --watch
 ```
 访问 `http://localhost:1313` 即可
 
