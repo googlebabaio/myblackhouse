@@ -33,9 +33,9 @@ https://docs.oracle.com/cd/E11882_01/rac.112/e41959/adddelclusterware.htm#CWADD9
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
-10.0.1.101	host01.example.com	host01
-10.0.1.102	host02.example.com	host02
-10.0.1.103	host03.example.com	host03
+10.0.1.101	host01.qmx.com	host01
+10.0.1.102	host02.qmx.com	host02
+10.0.1.103	host03.qmx.com	host03
 
 192.168.56.101	host01-priv
 192.168.56.102	host02-priv
@@ -45,9 +45,9 @@ https://docs.oracle.com/cd/E11882_01/rac.112/e41959/adddelclusterware.htm#CWADD9
 10.0.1.106	host02-vip
 10.0.1.107	host03-vip
 
-10.0.1.201	cluster01-scan.example.com	cluster01-scan
-#10.0.1.202 	cluster01-scan.example.com	cluster01-scan
-#10.0.1.203 	cluster01-scan.example.com	cluster01-scan
+10.0.1.201	cluster01-scan.qmx.com	cluster01-scan
+#10.0.1.202 	cluster01-scan.qmx.com	cluster01-scan
+#10.0.1.203 	cluster01-scan.qmx.com	cluster01-scan
 ```
 
 没有用到DNS服务器，均在/etc/hosts 文件中写死了配置，所以cluster01-scan只有一组，建议实际配置为三组
