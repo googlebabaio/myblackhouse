@@ -29,7 +29,7 @@ https://docs.oracle.com/cd/E11882_01/rac.112/e41959/adddelclusterware.htm#CWADD9
 ### 1.1 配置hosts
 以下是每一台主机的/etc/hosts，保证新增的主机/etc/hosts文件和其他两台一致，开始的时候ORACLE_HOME=/u01/app/11.2.0/grid
 ```
-[grid@host01 bin]$ cat /etc/hosts
+# cat /etc/hosts
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
@@ -53,9 +53,24 @@ https://docs.oracle.com/cd/E11882_01/rac.112/e41959/adddelclusterware.htm#CWADD9
 没有用到DNS服务器，均在/etc/hosts 文件中写死了配置，所以cluster01-scan只有一组，建议实际配置为三组
 
 ### 1.2 关闭防火墙等
+关闭防火墙
 ```
-[root@host03 ~]# service iptables stop
-[root@host03 ~]# chkconfig iptables off
+# service iptables stop
+# chkconfig iptables off
+```
+
+
+关闭selinux
+```
+Selinux=disable
+```
+
+
+关闭NetWorkerManager
+
+```
+service NetworkerManager stop
+chkconfig NetworkerManager off
 ```
 
 > 如果不关闭可能在安装的时候报PRVF-7617的错误
@@ -72,7 +87,6 @@ https://docs.oracle.com/cd/E11882_01/rac.112/e41959/adddelclusterware.htm#CWADD9
 [grid@host03 ~]$scp authorized_keys grid@host01:/home/oracle/.ssh/authorized_keys
 [grid@host03 ~]$scp authorized_keys grid@host02:/home/oracle/.ssh/authorized_keys
 [grid@host03 ~]$ ssh host01 date
-Fri May 19 09:59:38 CST 2017
 ```
 
 > 以上步骤在oracle用户也需要做一遍，后面要创建实例也是需要的。SSH校验时偶尔会出现以下错误
@@ -80,6 +94,20 @@ Fri May 19 09:59:38 CST 2017
 ### 1.4 修改内核参数
 
 ### 1.5 创建相应的用户和组
+```
+groupadd -g 501 oinstall
+groupadd -g 502 dba
+groupadd -g 503 oper
+groupadd -g 504 asmadmin
+groupadd -g 505 asmoper
+groupadd -g 506 asmdba
+
+useradd -g oinstall -G dba,asmdba,oper,asmadmin,asmoper oracle
+passwd oracle
+
+useradd -g oinstall -G asmadmin,asmdba,asmoper,oper,dba grid
+passwd oracle
+```
 
 
 ### 1.6 安装之前的检查
@@ -312,13 +340,13 @@ Installed Products
       Cluster Ready Services Files 11.2.0.4.0
       Oracle Database 11g 11.2.0.4.0
 -----------------------------------------------------------------------------
-Instantiating scripts for add node (Friday, May 19, 2017 9:05:44 AM CST)
+Instantiating scripts for add node (Friday, July 21, 2018 12:05:44 AM CST)
 .                                                                 1% Done.
 Instantiation of add node scripts complete
-Copying to remote nodes (Friday, May 19, 2017 9:05:48 AM CST)
+Copying to remote nodes (Friday, July 21, 2018 12:08:48 AM CST)
 ...............................................................................................                                 96% Done.
 Home copied to new nodes
-Saving inventory on nodes (Friday, May 19, 2017 9:09:06 AM CST)
+Saving inventory on nodes (Friday, July 21, 2018 12:09:06 AM CST)
 .                                                               100% Done.
 Save inventory complete
 WARNING:A new inventory has been created on one or more nodes in this session. However, it has not yet been registered as the central inventory of this system.
@@ -381,7 +409,7 @@ Configure Oracle Grid Infrastructure for a Cluster ... succeeded
 ### 2.3 检查集群的状态
 配置成功，检查节点是否正常添加到GI，在任意一台主机上执行，查看后台进程是否正常
 ```
-crs_stat -t
+$ crs_stat -t
 ```
 
 如上则正常添加，在这里有时候会因为网络原因导致配置host03所有步骤均对 但是host03最后只是把软件安装成功，进程却无法注册的现象，注意多检查预先检查时的报错，确保网络配置成功。
@@ -556,13 +584,13 @@ Installed Products
       Oracle Partitioning 11.2.0.4.0 
       Enterprise Edition Options 11.2.0.4.0 
 -----------------------------------------------------------------------------
-Instantiating scripts for add node (Friday, May 19, 2017 11:05:16 AM CST)
+Instantiating scripts for add node (Friday, July 21, 2018 13:06:13 AM CST)
 .                                                                 1% Done.
 Instantiation of add node scripts complete
-Copying to remote nodes (Friday, May 19, 2017 11:05:20 AM CST)
+Copying to remote nodes (Friday, July 21, 2018 13:06:25 AM CST)
 ...............................................................................................                                 96% Done.
 Home copied to new nodes
-Saving inventory on nodes (Friday, May 19, 2017 11:11:14 AM CST)
+Saving inventory on nodes (Friday, July 21, 2018 13:11:14 AM CST)
 .                                                               100% Done.Save inventory complete
 WARNING:
 The following configuration scripts need to be executed as the "root" user in each new cluster node. Each script in the list below is followed by a list of nodes.
