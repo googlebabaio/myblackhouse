@@ -1,5 +1,5 @@
 ---
-title: "Filco配对方法"
+title: "Filco 蓝牙配对方法"
 date: 2019-08-9
 draft: false
 tags: ["杂七杂八"]
