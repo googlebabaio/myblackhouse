@@ -1,4 +1,11 @@
-滚动更新”是什么意思，是如何实现的呢？
+---
+title: "k8s中的滚动更新"
+date: 2019-08-17
+draft: false
+tags: ["k8s"]
+---
+
+滚动更新是什么意思，是如何实现的呢？
 
 以这个 Deployment 为例，来为你讲解“滚动更新”的过程。
 
@@ -239,7 +246,7 @@ nginx-3196763511   3         3         3         28s
 很简单，Deployment 对象有一个字段，叫作 spec.revisionHistoryLimit，就是 Kubernetes 为 Deployment 保留的“历史版本”个数。所以，如果把它设置为 0，你就再也不能做回滚操作了。
 
 
-# 总结 
+# 总结
 
 Deployment 实际上是一个两层控制器。首先，它通过ReplicaSet 的个数来描述应用的版本；然后，它再通过ReplicaSet 的属性（比如 replicas 的值），来保证 Pod 的副本数量。
 
