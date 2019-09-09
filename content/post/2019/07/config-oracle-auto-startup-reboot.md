@@ -34,6 +34,4 @@ su oracle -lc "/u01/app/oracle/product/11.2.0/dbhome_1/bin/dbstart"
 它的作用是判断是否已经执行过 rc.local ,如果已经执行过则会建立一个/var/lock/subsys/local文件,否则就回去执行这个/etc/rc.d/rc.local
 另外，之前遇到过修改了rc.local脚本但不执行的问题,原因是rc.local文件的权限问题
 
-
-
 4.重启服务器验证

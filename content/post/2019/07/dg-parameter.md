@@ -8,4 +8,4 @@ tags: ["Oracle"]
 <!--more-->
 
 
-![](../assets/dg-parameter.png)
+![](assets/dg-parameter.png)
