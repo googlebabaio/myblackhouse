@@ -254,3 +254,6 @@ sudo chmod 777 $HOME/.kube/config
             Not Before: May 24 03:31:50 2019 GMT
             Not After : Sep  9 02:36:46 2020 GMT
 ```
+
+# 参考
+https://kubernetes.io/docs/reference/setup-tools/kubeadm/kubeadm-alpha/
