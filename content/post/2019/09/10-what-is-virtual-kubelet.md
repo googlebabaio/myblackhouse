@@ -18,7 +18,7 @@ tags: ["k8s"]
 # Virtual Kubelet的工作原理
 从Kubernetes API服务器的角度来看，Virtual Kubelet看起来像普通的kubelet，但其关键区别在于它们在其他地方调度容器，例如在云无服务器API中，而不是在节点上。
 
-![](assets/markdown-img-paste-20190910080037180.png)
+![](../assets/markdown-img-paste-20190910080037180.png)
 
 供应商
 Virtual Kubelet支持各种供应商（Provider）：
