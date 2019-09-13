@@ -36,3 +36,6 @@ Virtual Kubelet支持各种供应商（Provider）：
 # 参考
 > https://www.ctolib.com/virtual-kubelet-virtual-kubelet.html
 > [部署Virtual Kubelet with ECI](https://help.aliyun.com/document_detail/97527.html)
+> https://www.ctolib.com/article/compares/12551
+> https://github.com/virtual-kubelet/virtual-kubelet
+> https://www.sohu.com/a/239364587_355140
