@@ -1,3 +1,13 @@
+---
+title: "mac下iterm2的配置"
+subtitile: "记录下mac下iterm2的配置过程"
+date: 2019-08-03
+draft: true
+tags: ["杂七杂八"]
+---
+
+介绍mac下iterm2的配置
+<!--more-->
 参考
 https://www.cnblogs.com/soyxiaobi/p/9695931.html
 https://www.cnblogs.com/xishuai/p/mac-iterm2.html
@@ -85,4 +95,4 @@ vi ~/.zshrc
 
 最后的效果大致如下：
 
-![](img/2019-08-12-14-00-52.png)
+![](../img/2019-08-12-14-00-52.png)
