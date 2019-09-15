@@ -16,7 +16,6 @@ tags: ["linux"]
  - prometheus强化学习
  - golang学习
  - 有时间可以看看Oracle的12c
- - 买个macbookpro?
  - etcd
  - 真正理解什么是声明式编程
  - grpc 与 rest的区别
