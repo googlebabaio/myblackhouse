@@ -41,7 +41,7 @@ PID   USER     TIME  COMMAND
 这种技术，就是 Linux 里面的 Namespace 机制。而 Namespace 的使用方式也非常有意思：它其实只是 Linux 创建新进程的一个可选参数。我们知道，在 Linux 系统中创建线程的系统调用是 clone()，比如
 
 ```
-int pid = clone(main_function, stack_size, SIGCHLD, NULL); 
+int pid = clone(main_function, stack_size, SIGCHLD, NULL);
 ```
 
 这个系统调用就会为我们创建一个新的进程，并且返回它的进程号 pid。
@@ -160,7 +160,7 @@ cgroup.event_control   cpuacct.stat  cpuacct.usage_percpu  cpu.cfs_quota_us   cp
 
 ```
 # while : ; do : ; done &
-[1] 27347 
+[1] 27347
 ```
 
 显然，它执行了一个死循环，可以把计算机的 CPU 吃到 100%，根据它的输出，我们可以看到这个脚本在后台运行的进程号（PID）是 `27347`
@@ -176,7 +176,7 @@ KiB Mem : 16003912 total,  1288044 free,  7434712 used,  7281156 buff/cache
 KiB Swap:  1835004 total,  1822148 free,    12856 used.  8049520 avail Mem
 
   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
-27347 root      20   0  115576    660    152 R  100.0  0.0   0:11.66 bash  
+27347 root      20   0  115576    660    152 R  100.0  0.0   0:11.66 bash
 ```
 
 
@@ -187,14 +187,14 @@ KiB Swap:  1835004 total,  1822148 free,    12856 used.  8049520 avail Mem
 # cat /sys/fs/cgroup/cpu/container/cpu.cfs_quota_us
 -1
 # cat /sys/fs/cgroup/cpu/container/cpu.cfs_period_us
-100000 
+100000
 ```
 
 接下来，我们可以通过修改这些文件的内容来设置限制。
 
 比如，向 container 组里的 cfs_quota 文件写入 20 ms（20000 us）：
 ```
-# echo 20000 > /sys/fs/cgroup/cpu/container/cpu.cfs_quota_us 
+# echo 20000 > /sys/fs/cgroup/cpu/container/cpu.cfs_quota_us
 ```
 
 结合前面的介绍，你应该能明白这个操作的含义，它意味着在每 100 ms 的时间里，被该控制组限制的进程只能使用 20 ms 的 CPU 时间，也就是说这个进程只能使用到 20% 的 CPU 带宽。
@@ -214,7 +214,7 @@ KiB Mem : 16003912 total,  1289060 free,  7433456 used,  7281396 buff/cache
 KiB Swap:  1835004 total,  1822148 free,    12856 used.  8050768 avail Mem
 
   PID USER      PR  NI    VIRT    RES    SHR S  %CPU %MEM     TIME+ COMMAND
-27347 root      20   0  115576    660    152 R  19.9  0.0   1:33.00 bash 
+27347 root      20   0  115576    660    152 R  19.9  0.0   1:33.00 bash
 ```
 
 
@@ -239,7 +239,7 @@ b3335d66acf7068945789cee28e1c9d731f85abd50c09486bcfa161e974db583
 # cat /sys/fs/cgroup/cpu/docker/b3335d66acf7068945789cee28e1c9d731f85abd50c09486bcfa161e974db583/cpu.cfs_period_us
 100000
 # cat /sys/fs/cgroup/cpu/docker/b3335d66acf7068945789cee28e1c9d731f85abd50c09486bcfa161e974db583/cpu.cfs_quota_us
-20000 
+20000
 ```
 
 这就意味着这个 Docker 容器，只能使用到 20% 的 CPU 带宽。
