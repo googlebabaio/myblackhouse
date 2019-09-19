@@ -253,7 +253,7 @@ metadata
     ...
 ```
 
-在这个 Pod 里，我们添加了一个 Annotation，写明： initializer.kubernetes.io/envoy=true。这样，就会使用到我们前面所定义的 envoy-initializer 了。
+在这个 Pod 里，我们添加了一个 Annotation，写明： `initializer.kubernetes.io/envoy=true`。这样，就会使用到我们前面所定义的 envoy-initializer 了。
 
 以上，就是关于 Initializer 最基本的工作原理和使用方法了。相信你此时已经明白，Istio 项目的核心，就是由无数个运行在应用 Pod 中的 Envoy 容器组成的服务代理网格。这也正是 Service Mesh 的含义。
 
