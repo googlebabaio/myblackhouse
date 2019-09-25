@@ -52,7 +52,7 @@ tags: ["k8s"]
 
 # 2.监控中心
 
-![](../assets/markdown-img-paste-20190916133655794.png)
+![](assets/markdown-img-paste-20190916133655794.png)
 
 ## 部署方式
 - 二进制
