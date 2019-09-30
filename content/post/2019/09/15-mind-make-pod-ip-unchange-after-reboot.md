@@ -32,9 +32,6 @@ fi
 ```
 
 
-
-
-
 3. 安装json解析工具jq
 ```
 # sudo dnf install -y jq
