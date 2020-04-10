@@ -65,7 +65,7 @@ iTerm2 -> Preferences -> Profiles -> Text
 ```
 
 6. 安装主题
-```
+```shell
 git clone https://github.com/fcamblor/oh-my-zsh-agnoster-fcamblor.git
 
 cd oh-my-zsh-agnoster-fcamblor/
@@ -73,7 +73,7 @@ cd oh-my-zsh-agnoster-fcamblor/
 ```
 
 7. 安装高亮插件
-```
+```shell
 cd ~/.oh-my-zsh/custom/plugins/
 
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
@@ -95,4 +95,4 @@ vi ~/.zshrc
 
 最后的效果大致如下：
 
-![](../img/2019-08-12-14-00-52.png)
+![](img/2019-08-12-14-00-52.png)
