@@ -141,7 +141,7 @@ vars = ["title", "summary", "date", "publishdate", "expirydate", "permalink"]
 params = ["categories", "tags"]
 
 [permalinks]
-    post = "/filename"
+    post = "/:filename.html"
 
 [Blackfriday] #
 hrefTargetBlank = true
